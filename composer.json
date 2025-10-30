@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
-        "moonshine/moonshine": "3.*.*-dev",
+        "moonshine/moonshine": "4.x-dev",
         "moonshine/permissions": "^2.0"
     },
     "require-dev": {
@@ -62,18 +62,6 @@
             "php-http/discovery": true
         }
     },
-    "repositories": [
-        {
-            "type": "github",
-            "url": "https://github.com/moonshine-software/moonshine",
-            "options": {
-                "versions": {
-                    "moonshine/moonshine": "3.*.*-dev"
-                },
-                "symlink": true
-            }
-        }
-    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }

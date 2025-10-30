@@ -6,13 +6,14 @@ namespace App\MoonShine\Pages;
 
 use App\Models\TodoItem;
 use Illuminate\Support\Collection;
+use MoonShine\Contracts\Core\DependencyInjection\CrudRequestContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
-use MoonShine\Laravel\MoonShineRequest;
-use MoonShine\Laravel\Pages\Page;
 use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\Crud\JsonResponse;
+use MoonShine\Laravel\Pages\Page;
 use MoonShine\Laravel\TypeCasts\ModelCaster;
 use MoonShine\Support\AlpineJs;
+use MoonShine\Support\Attributes\AsyncMethod;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\ToastType;
 use MoonShine\UI\Components\ActionButton;
@@ -20,10 +21,10 @@ use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Icon;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\DateRange;
+use MoonShine\UI\Fields\Fieldset;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Position;
 use MoonShine\UI\Fields\Preview;
-use MoonShine\UI\Fields\StackFields;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Textarea;
 use Throwable;
@@ -108,7 +109,7 @@ class Dashboard extends Page
 
             Position::make(),
 
-            StackFields::make()->fields([
+            Fieldset::make()->fields([
                 Text::make('Title')->badge(),
                 Text::make('Description'),
                 DateRange::make('Date')
@@ -156,7 +157,8 @@ class Dashboard extends Page
         ];
     }
 
-    public function reorder(MoonShineRequest $request): MoonShineJsonResponse
+    #[AsyncMethod]
+    public function reorder(CrudRequestContract $request): JsonResponse
     {
         $request->string('data')->explode(',')->each(
             fn (string $id, int $sortOrder) => TodoItem::query()
@@ -164,20 +166,22 @@ class Dashboard extends Page
                 ?->update(['sort_order' => $sortOrder])
         );
 
-        return MoonShineJsonResponse::make();
+        return JsonResponse::make();
     }
 
-    public function done(MoonShineRequest $request): MoonShineJsonResponse
+    #[AsyncMethod]
+    public function done(CrudRequestContract $request): JsonResponse
     {
         TodoItem::query()
             ->find($request->getItemID())
             ?->delete();
 
-        return MoonShineJsonResponse::make()
+        return JsonResponse::make()
             ->toast('Congratulation', ToastType::SUCCESS);
     }
 
-    public function save(MoonShineRequest $request): MoonShineJsonResponse
+    #[AsyncMethod]
+    public function save(CrudRequestContract $request): JsonResponse
     {
         $request->validate([
             'title' => ['required', 'string'],
@@ -190,7 +194,7 @@ class Dashboard extends Page
             'to' => data_get($request->get('date'), 'to'),
         ]);
 
-        return MoonShineJsonResponse::make()
+        return JsonResponse::make()
             ->toast('Added', ToastType::SUCCESS);
     }
 }
