@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
-        "moonshine/moonshine": "4.x-dev",
+        "moonshine/moonshine": "^4.0",
         "moonshine/permissions": "^2.0"
     },
     "require-dev": {
