@@ -19,6 +19,7 @@ use MoonShine\Support\Enums\ToastType;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Icon;
+use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\DateRange;
 use MoonShine\UI\Fields\Fieldset;
@@ -57,6 +58,8 @@ class Dashboard extends Page
                 ->icon('plus')
                 ->inModal('New task', fn () => $this->formComponent())
             ,
+
+            LineBreak::make(),
 
             TableBuilder::make(fields: $this->listFields())
                 ->customAttributes([
